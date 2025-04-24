@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎰 Casino Heist Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: url('https://images.unsplash.com/photo-1539974861238-9739cbc210e8?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+    }
+
+    .card {
+      width: 350px;
+      height: 440px;
+      perspective: 1000px;
+      margin: 100px auto;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      transition: transform 1s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front,
+    .card-back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid gold;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    }
+
+    .card-front {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: gold;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: gold;
+    }
+
+    .lock-icon {
+      font-size: 40px;
+      color: gold;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: gold;
+      font-size: 1em;
+    }
+
+    input::placeholder {
+      color: #888;
+    }
+
+    button {
+      background: gold;
+      border: none;
+      padding: 12px;
+      margin-top: 15px;
+      color: black;
+      font-weight: bold;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .vault-door {
+      margin-top: 20px;
+      display: none;
+      font-size: 18px;
+      color: #0f0;
+    }
+
+    .fingerprint {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: url('https://i.imgur.com/T0g8O5p.gif') no-repeat center center;
+      background-size: contain;
+      filter: invert(1) brightness(1.5);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: black;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .overlay.active {
+      display: flex;
+      animation: fadeOut 2s forwards 2s;
+    }
+
+    .overlay h1 {
+      color: gold;
+      font-size: 2.5em;
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    audio {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-locked-door-click-2852.mp3"></audio>
+  <audio id="chipSound" src="https://assets.mixkit.co/sfx/preview/mixkit-casino-chip-2434.mp3"></audio>
+  <audio id="bgMusic" src="https://assets.mixkit.co/music/preview/mixkit-jazzy-abstract-beat-742.mp3" loop autoplay></audio>
+
+  <div class="overlay" id="overlay">
+    <h1>🔓 Vault Access Granted</h1>
+  </div>
+
+  <div class="card" id="loginCard">
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="lock-icon">🔒</div>
+        <button onclick="flipCard()">🔐 Start Heist</button>
+      </div>
+      <div class="card-back">
+        <h2>Casino Heist Login</h2>
+        <div class="fingerprint"></div>
+        <input type="text" id="username" placeholder="Code Name" />
+        <input type="password" id="password" placeholder="Vault Pass" />
+        <button onclick="attemptLogin()">Enter Vault</button>
+        <div class="vault-door" id="vaultDoor">✅ Vault Access Granted.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const clickSound = document.getElementById('clickSound');
+    const chipSound = document.getElementById('chipSound');
+    const overlay = document.getElementById('overlay');
+
+    function flipCard() {
+      document.getElementById('loginCard').classList.add('flipped');
+      chipSound.play();
+    }
+
+    function attemptLogin() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const vault = document.getElementById('vaultDoor');
+
+      if (user && pass) {
+        clickSound.play();
+        vault.style.display = 'block';
+        vault.innerHTML = `✅ Welcome, ${user}. Preparing vault...`;
+
+        setTimeout(() => {
+          overlay.classList.add('active');
+        }, 1500);
+      } else {
+        vault.style.display = 'block';
+        vault.style.color = '#f00';
+        vault.innerHTML = `❌ Access Denied.`;
+      }
+    }
+  </script>
+</body>
+</html>
